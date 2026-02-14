@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>El Mapa de Nuestra Cita ✨</title>
     <style>
         /* --- FUENTES MÁGICAS --- */
@@ -18,15 +18,15 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 40px 20px;
+            padding: 30px 15px; /* Un poco menos de padding en móviles */
             overflow-x: hidden;
         }
 
         h1.main-title { 
             color: #d4af37; 
             text-shadow: 2px 2px 5px rgba(0,0,0,0.8); 
-            margin-bottom: 40px; 
-            font-size: 2.5rem; 
+            margin-bottom: 30px; 
+            font-size: 2rem; /* Un poco más pequeño para móvil */
             text-align: center; 
             border-bottom: 2px dashed #d4af37;
             padding-bottom: 15px;
@@ -41,7 +41,7 @@
             border: 4px double #8b4513;
             border-radius: 8px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-            padding: 40px 30px;
+            padding: 30px 20px; /* Ajustado para móvil */
             position: relative;
         }
 
@@ -49,35 +49,32 @@
         .timeline {
             position: relative;
             margin: 20px 0;
-            padding-left: 30px;
+            padding-left: 25px;
             border-left: 3px solid #8b0000;
         }
 
         .timeline-item {
             position: relative;
-            margin-bottom: 40px;
+            margin-bottom: 35px;
         }
 
         .timeline-item::before {
             content: '✨';
             position: absolute;
-            left: -48px;
+            left: -43px; /* Ajustado */
             top: 0;
             background: #1a0a1e;
-            width: 35px;
-            height: 35px;
+            width: 32px; height: 32px; /* Ajustado */
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem;
             border: 2px solid #d4af37;
             box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
         }
 
         .timeline-content {
             background: rgba(255, 255, 255, 0.4);
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
             border: 1px solid #dcbfa5;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
@@ -85,22 +82,24 @@
         }
 
         .timeline-content:hover {
-            transform: scale(1.02);
+            transform: scale(1.01);
             background: rgba(255, 255, 255, 0.6);
         }
 
         .timeline-content h3 {
             color: #8b0000;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             margin-bottom: 10px;
         }
 
         .timeline-content p {
             font-family: 'Dancing Script', cursive;
             color: #3b2314;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             line-height: 1.4;
             margin-bottom: 8px;
+            /* NUEVO: Texto justificado */
+            text-align: justify;
         }
 
         .time-label {
@@ -108,52 +107,57 @@
             background: #8b0000;
             color: #d4af37;
             font-family: 'Cinzel Decorative', serif;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             padding: 4px 10px;
             border-radius: 12px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             letter-spacing: 1px;
         }
 
         /* --- CARTA SECRETA (BOTÓN Y MODAL) --- */
         .secret-trigger-container {
             text-align: center;
-            margin-top: 50px;
+            margin-top: 40px;
             border-top: 2px dashed #8b4513;
-            padding-top: 30px;
+            padding-top: 25px;
         }
 
         .secret-btn {
             background: #111;
             color: #d4af37;
             font-family: 'Cinzel Decorative', serif;
-            font-size: 1.2rem;
-            padding: 15px 30px;
+            font-size: 1.1rem;
+            padding: 12px 25px;
             border: 2px dashed #d4af37;
             border-radius: 30px;
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
             transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+            display: inline-flex; align-items: center; gap: 8px;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .secret-btn:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
         }
 
-        /* Modal Secreto Oculto */
+        /* Modal Secreto Oculto (CORREGIDO PARA MÓVIL) */
         #secret-letter {
             display: none;
-            margin-top: 30px;
-            padding: 40px 30px;
+            margin-top: 25px;
+            padding: 25px 20px;
             background-color: #1a0a1e;
             border: 2px solid #d4af37;
             border-radius: 8px;
             color: #edd59e;
             box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+            
+            /* NUEVO: Altura máxima y scroll interno */
+            max-height: 80vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+
             animation: revealMagic 0.8s ease-out forwards;
         }
 
@@ -164,36 +168,39 @@
 
         #secret-letter h2 {
             color: #d4af37;
-            font-size: 1.8rem;
-            margin-bottom: 25px;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
             text-align: center;
             border-bottom: 1px solid rgba(212, 175, 55, 0.3);
             padding-bottom: 15px;
+            line-height: 1.3;
         }
 
         #secret-letter p {
             font-family: 'Dancing Script', cursive;
-            font-size: 1.4rem;
-            line-height: 1.6;
-            margin-bottom: 18px;
+            font-size: 1.35rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
             color: #f4e4bc;
-            text-align: left;
+            /* NUEVO: Texto justificado */
+            text-align: justify;
         }
 
         #secret-letter .valentines-text {
-            text-align: center;
-            font-size: 2rem;
+            text-align: center; /* Este sí va centrado */
+            font-size: 1.8rem;
             color: #d84361;
-            margin-top: 30px;
+            margin-top: 25px;
             margin-bottom: 10px;
         }
 
         #secret-letter .signature {
             text-align: right;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             color: #d4af37;
-            margin-top: 30px;
+            margin-top: 25px;
             font-weight: bold;
+            padding-bottom: 10px; /* Espacio extra para el scroll */
         }
     </style>
 </head>
@@ -237,7 +244,7 @@
         </div>
 
         <div class="secret-trigger-container">
-            <p style="font-family: 'Dancing Script', cursive; color: #5a3219; font-size: 1.4rem; margin-bottom: 15px;">Hay un último secreto aguardando...</p>
+            <p style="font-family: 'Dancing Script', cursive; color: #5a3219; font-size: 1.3rem; margin-bottom: 15px;">Hay un último secreto aguardando...</p>
             <button class="secret-btn" id="btn-revelar">
                 Lumos Maxima 🪄 Revelar Carta
             </button>
@@ -277,6 +284,7 @@
             btnRevelar.style.display = 'none';
             secretLetter.style.display = 'block';
             setTimeout(() => {
+                // Hacemos scroll al inicio de la carta para que empiece a leer desde arriba
                 secretLetter.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 100);
         });

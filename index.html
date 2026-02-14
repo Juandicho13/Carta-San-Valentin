@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Entrega Mágica para Mariana 🦉</title>
     <style>
         /* --- FUENTES MÁGICAS --- */
@@ -14,7 +14,8 @@
             background: linear-gradient(135deg, #2b102f 0%, #1a0a1e 100%);
             font-family: 'Cinzel Decorative', serif;
             height: 100vh;
-            overflow: hidden;
+            /* Importante: hidden para que los elementos flotantes no creen scroll en el cuerpo */
+            overflow: hidden; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -25,14 +26,14 @@
         #counter-badge {
             position: absolute; top: 20px; right: 20px;
             background: rgba(43, 16, 47, 0.9); color: #d4af37;
-            padding: 10px 25px; border-radius: 15px; font-size: 1.1rem;
+            padding: 8px 20px; border-radius: 15px; font-size: 1rem;
             border: 2px solid #d4af37; box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
             z-index: 100;
         }
 
         /* --- SOBRE CERRADO --- */
         .envelope-wrapper {
-            position: relative; width: 300px; height: 200px; cursor: pointer;
+            position: relative; width: 280px; height: 180px; cursor: pointer;
             transition: transform 0.3s; z-index: 50;
         }
         .envelope-wrapper:hover { transform: scale(1.05); }
@@ -44,61 +45,77 @@
         }
 
         .flap { position: absolute; width: 0; height: 0; border-style: solid; }
-        .flap-left { border-width: 100px 0 100px 150px; border-color: transparent transparent transparent #cbaea1; top: 0; left: 0; }
-        .flap-right { border-width: 100px 150px 100px 0; border-color: transparent #cbaea1 transparent transparent; top: 0; right: 0; }
-        .flap-bottom { border-width: 0 150px 110px 150px; border-color: transparent transparent #e6cfb9 transparent; bottom: 0; left: 0; z-index: 2; }
-        .flap-top { border-width: 120px 150px 0 150px; border-color: #d4bcab transparent transparent transparent; top: 0; left: 0; z-index: 3; transform-origin: top; transition: transform 0.6s ease-in-out; }
+        .flap-left { border-width: 90px 0 90px 140px; border-color: transparent transparent transparent #cbaea1; top: 0; left: 0; }
+        .flap-right { border-width: 90px 140px 90px 0; border-color: transparent #cbaea1 transparent transparent; top: 0; right: 0; }
+        .flap-bottom { border-width: 0 140px 100px 140px; border-color: transparent transparent #e6cfb9 transparent; bottom: 0; left: 0; z-index: 2; }
+        .flap-top { border-width: 110px 140px 0 140px; border-color: #d4bcab transparent transparent transparent; top: 0; left: 0; z-index: 3; transform-origin: top; transition: transform 0.6s ease-in-out; }
 
         /* Sello Rojo del Sobre */
         .wax-seal-outer {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -80%);
-            width: 50px; height: 50px; background: #8b0000; border-radius: 50%; z-index: 4;
+            width: 45px; height: 45px; background: #8b0000; border-radius: 50%; z-index: 4;
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 3px 5px rgba(0,0,0,0.3); border: 2px dashed #600000;
-            color: #500000; font-size: 24px; font-weight: bold;
+            color: #500000; font-size: 22px; font-weight: bold;
         }
 
-        /* --- CARTA ABIERTA --- */
+        /* --- CARTA ABIERTA (CORREGIDO PARA MÓVIL) --- */
         #letter-container {
-            position: absolute; top: 50%; left: 50%;
+            position: absolute; 
+            top: 50%; 
+            left: 50%;
             transform: translate(-50%, -50%) scale(0);
-            width: 95%; max-width: 550px;
+            width: 90%; 
+            max-width: 550px;
+            
+            /* NUEVO: Altura máxima y scroll interno para que no se corte */
+            max-height: 90vh; 
+            overflow-y: auto; 
+            -webkit-overflow-scrolling: touch; /* Scroll suave en iPhone */
+
             background-color: #f4e4bc;
             background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
-            padding: 40px 30px;
+            padding: 30px 25px;
             border: 4px double #8b4513; border-radius: 8px;
             box-shadow: 0 0 60px rgba(212, 175, 55, 0.5);
             z-index: 200; opacity: 0;
             transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow: hidden; 
         }
 
         #letter-container.open { transform: translate(-50%, -50%) scale(1); opacity: 1; }
 
         .letter-content h2 {
             font-family: 'Cinzel Decorative', serif; color: #5a3219;
-            text-align: center; margin-bottom: 20px; font-size: 1.8rem;
+            text-align: center; margin-bottom: 20px; font-size: 1.6rem;
             border-bottom: 2px solid #d4af37; padding-bottom: 10px;
         }
 
         .letter-content p {
             font-family: 'Dancing Script', cursive; font-size: 1.4rem;
             color: #3b2314; line-height: 1.5; margin-bottom: 15px;
+            /* NUEVO: Texto justificado */
+            text-align: justify;
         }
 
-        .signature { text-align: right; font-size: 1.6rem; margin-top: 20px; font-weight: bold; color: #8b0000; }
+        /* Excepción para la pregunta principal y textos centrados */
+        .letter-content p.centered-text {
+            text-align: center;
+        }
+
+        .signature { text-align: right; font-size: 1.5rem; margin-top: 20px; font-weight: bold; color: #8b0000; }
 
         /* --- BOTÓN SÍ --- */
         .botones-container {
-            margin-top: 30px;
+            margin-top: 25px;
             display: flex;
             justify-content: center;
+            padding-bottom: 10px; /* Espacio extra para el scroll */
         }
 
         .magical-btn {
             font-family: 'Cinzel Decorative', serif;
-            padding: 12px 40px;
-            font-size: 1.3rem;
+            padding: 12px 35px;
+            font-size: 1.2rem;
             border: 3px solid #d4af37;
             background-color: #8b0000;
             color: #d4af37;
@@ -107,35 +124,34 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             transition: transform 0.2s;
             text-shadow: 1px 1px 2px #000;
+            white-space: nowrap; /* Evita que el texto del botón se parta */
         }
         .magical-btn:active { transform: scale(0.95); }
 
         /* --- SELLO NEGRO FINAL Y ENLACE --- */
-        /* Estilo para el enlace que envuelve al sello */
         .seal-link {
             text-decoration: none;
             display: block;
             width: fit-content;
-            margin: 30px auto 10px auto;
+            margin: 25px auto 10px auto;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent; /* Quita el parpadeo azul en móviles */
         }
-        /* Efecto al pasar el mouse sobre el enlace */
         .seal-link:hover .black-seal-final {
             transform: scale(1.1);
             box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
         }
 
         .black-seal-final {
-            width: 80px; height: 80px;
-            background: #111; /* Negro casi puro */
+            width: 70px; height: 70px;
+            background: #111; 
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            color: #d4af37; /* H dorada */
+            color: #d4af37; 
             font-family: 'Cinzel Decorative', serif;
-            font-size: 40px;
+            font-size: 35px;
             border: 3px dashed #333;
             box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-            /* Transición suave para el hover */
             transition: all 0.3s ease;
             animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -144,17 +160,12 @@
 
         /* --- TÍTULO PRINCIPAL Y ANIMACIONES --- */
         h1.main-title { 
-            color: #edd59e; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); margin-top: 40px; font-size: 1.8rem; text-align: center; z-index: 10; 
-            transition: opacity 0.5s ease; /* Transición para desvanecer */
+            color: #edd59e; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); margin-top: 30px; font-size: 1.5rem; text-align: center; z-index: 10; 
+            transition: opacity 0.5s ease; padding: 0 10px;
         }
-        /* Clase para ocultar el título */
-        .title-hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
+        .title-hidden { opacity: 0; pointer-events: none; }
 
-
-        .floater { position: absolute; font-size: 3.5rem; cursor: pointer; bottom: -80px; animation: floatUp linear forwards; z-index: 100; filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5)); }
+        .floater { position: absolute; font-size: 3rem; cursor: pointer; bottom: -80px; animation: floatUp linear forwards; z-index: 100; filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5)); }
         @keyframes floatUp { to { transform: translateY(-120vh) rotate(20deg); } }
         .vanish { animation: fadeOut 0.5s forwards; }
         @keyframes fadeOut { to { opacity: 0; transform: scale(1.5); } }
@@ -179,7 +190,7 @@
             <p>Querida <strong>Mariana</strong>,</p>
             <p>Se requiere una habilidad mágica impresionante para interceptar estas cartas. ¡Claramente eres una bruja talentosa!</p>
             <p>Ya que has atrapado el mensaje, tengo una pregunta muy importante que ni el Sombrero Seleccionador podría decidir por mí:</p>
-            <p style="text-align: center; font-size: 2rem; color: #8b0000; margin: 20px 0; font-family: 'Cinzel Decorative', serif;">¿Quieres ser mi San Valentín? ❤️</p>
+            <p class="centered-text" style="font-size: 1.8rem; color: #8b0000; margin: 20px 0; font-family: 'Cinzel Decorative', serif;">¿Quieres ser mi San Valentín? ❤️</p>
             <p>Prometo que nuestra cita será mejor que una cerveza de mantequilla en Las Tres Escobas.</p>
             <div class="signature">Con amor mágico,<br>Chiquitongo</div>
 
@@ -228,25 +239,24 @@
         // --- ACCIÓN DEL BOTÓN SÍ ---
         const btnSi = document.getElementById('btn-si');
         const messageArea = document.getElementById('final-message-area');
-        // Seleccionamos el título principal
         const mainTitle = document.querySelector('.main-title');
 
         btnSi.addEventListener('click', () => {
             launchConfetti(); launchConfetti();
             if (navigator.vibrate) navigator.vibrate([50, 100, 50, 100]);
 
-            // 1. OCULTAR EL TÍTULO DE FONDO
+            // Oculta el título del fondo
             mainTitle.classList.add('title-hidden');
 
-            // 2. REEMPLAZAR CONTENIDO Y AGREGAR EL ENLACE EN EL SELLO
+            // Muestra el mensaje final y el enlace hacia el itinerario
             messageArea.innerHTML = `
-                <h2 style="color: #d4af37; border:none; font-size: 2.5rem;">¡Cita Aceptada! ✨</h2>
-                <p style="text-align:center; font-size: 1.8rem; margin-top: 30px;">
+                <h2 style="color: #d4af37; border:none; font-size: 2.2rem;">¡Cita Aceptada! ✨</h2>
+                <p class="centered-text" style="font-size: 1.6rem; margin-top: 25px;">
                     ¡Sabía que dirías que sí! <br> Prepárate para la mejor cita mágica. ❤️
                 </p>
-                <p style="text-align:center; font-size: 1.2rem; margin-top: 20px; color: #d4af37;">(Toca el sello para continuar)</p>
+                <p class="centered-text" style="font-size: 1.1rem; margin-top: 20px; color: #d4af37;">(Toca el sello para continuar)</p>
 
-                <div class="seal-link" onclick="window.location.href='itinerario.html'" style="cursor: pointer;">
+                <div class="seal-link" onclick="window.location.href='itinerario.html'">
                     <div class="black-seal-final">H</div>
                 </div>
             `;
