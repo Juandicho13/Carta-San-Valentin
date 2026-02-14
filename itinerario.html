@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Mapa de Nuestra Cita ✨</title>
+    <style>
+        /* --- FUENTES MÁGICAS --- */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Dancing+Script:wght@600&display=swap');
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: linear-gradient(135deg, #2b102f 0%, #1a0a1e 100%);
+            font-family: 'Cinzel Decorative', serif;
+            color: #edd59e;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            overflow-x: hidden;
+        }
+
+        h1.main-title { 
+            color: #d4af37; 
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.8); 
+            margin-bottom: 40px; 
+            font-size: 2.5rem; 
+            text-align: center; 
+            border-bottom: 2px dashed #d4af37;
+            padding-bottom: 15px;
+        }
+
+        /* --- CONTENEDOR DEL PERGAMINO --- */
+        .parchment-container {
+            width: 100%;
+            max-width: 650px;
+            background-color: #f4e4bc;
+            background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
+            border: 4px double #8b4513;
+            border-radius: 8px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            padding: 40px 30px;
+            position: relative;
+        }
+
+        /* --- CRONOGRAMA (TIMELINE) --- */
+        .timeline {
+            position: relative;
+            margin: 20px 0;
+            padding-left: 30px;
+            border-left: 3px solid #8b0000;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .timeline-item::before {
+            content: '✨';
+            position: absolute;
+            left: -48px;
+            top: 0;
+            background: #1a0a1e;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            border: 2px solid #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.4);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #dcbfa5;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .timeline-content:hover {
+            transform: scale(1.02);
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .timeline-content h3 {
+            color: #8b0000;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .timeline-content p {
+            font-family: 'Dancing Script', cursive;
+            color: #3b2314;
+            font-size: 1.4rem;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .time-label {
+            display: inline-block;
+            background: #8b0000;
+            color: #d4af37;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 0.9rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* --- CARTA SECRETA (BOTÓN Y MODAL) --- */
+        .secret-trigger-container {
+            text-align: center;
+            margin-top: 50px;
+            border-top: 2px dashed #8b4513;
+            padding-top: 30px;
+        }
+
+        .secret-btn {
+            background: #111;
+            color: #d4af37;
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.2rem;
+            padding: 15px 30px;
+            border: 2px dashed #d4af37;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .secret-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Modal Secreto Oculto */
+        #secret-letter {
+            display: none;
+            margin-top: 30px;
+            padding: 40px 30px;
+            background-color: #1a0a1e;
+            border: 2px solid #d4af37;
+            border-radius: 8px;
+            color: #edd59e;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+            animation: revealMagic 0.8s ease-out forwards;
+        }
+
+        @keyframes revealMagic {
+            0% { opacity: 0; transform: scale(0.9) translateY(20px); filter: blur(5px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+        }
+
+        #secret-letter h2 {
+            color: #d4af37;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            padding-bottom: 15px;
+        }
+
+        #secret-letter p {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.4rem;
+            line-height: 1.6;
+            margin-bottom: 18px;
+            color: #f4e4bc;
+            text-align: left;
+        }
+
+        #secret-letter .valentines-text {
+            text-align: center;
+            font-size: 2rem;
+            color: #d84361;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+
+        #secret-letter .signature {
+            text-align: right;
+            font-size: 1.6rem;
+            color: #d4af37;
+            margin-top: 30px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="main-title">El Mapa de Nuestra Cita ✨</h1>
+
+    <div class="parchment-container">
+        
+        <div class="timeline">
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <span class="time-label">Mañana</span>
+                    <h3>Desayuno en Fontanar</h3>
+                    <p>Para empezar el día con la energía de un dragón, preparé un desayuno especial en Crepes & Waffles. Prometo que la comida estará deliciosa y la compañía será inmejorable.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <span class="time-label">Mediodía / Tarde</span>
+                    <h3>Cine Mágico en Proyector</h3>
+                    <p>Encenderemos el proyector para la maratón definitiva. El itinerario incluye:</p>
+                    <p>🐸 2 Películas de los Muppets</p>
+                    <p>💃 La La Land</p>
+                    <p>🤖 3 Robots</p>
+                    <p>🎬 A pesar de ti</p>
+                    <p>✨ ¡Y una película sorpresa a tu elección!</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <span class="time-label">Tarde / Noche</span>
+                    <h3>Banquete a tu Elección</h3>
+                    <p>Después de tanta magia y cine, ¡tú tienes el control del mapa del merodeador! El almuerzo será exactamente donde tú elijas para recargar nuestras energías.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="secret-trigger-container">
+            <p style="font-family: 'Dancing Script', cursive; color: #5a3219; font-size: 1.4rem; margin-bottom: 15px;">Hay un último secreto aguardando...</p>
+            <button class="secret-btn" id="btn-revelar">
+                Lumos Maxima 🪄 Revelar Carta
+            </button>
+
+            <div id="secret-letter">
+                <h2>Para la dueña de mi mejor historia</h2>
+                
+                <p>Mi amor,</p>
+                
+                <p>Hoy no solo quiero celebrarnos, sino agradecerte por todo lo que hemos construido. A veces me pongo a pensar en cómo llegamos hasta aquí y me doy cuenta de que "saben, un pequeño detalle puede cambiarte la vida". Conocerte fue ese detalle que lo cambió todo para mí.</p>
+                
+                <p>He aprendido que la vida no se trata de cuántas horas tiene el día, sino de la calidad de los momentos. "En cuanto al tiempo, lo más importante es con quien lo pasas", y no hay ningún otro lugar en el mundo donde prefiera estar que a tu lado. Contigo he aprendido a amar lo imperfecto, esa belleza de lo simple y lo auténtico que los japoneses llaman "wabi-sabi".</p>
+                
+                <p>Gracias por ser luz en los días grises. En un mundo que a veces parece difícil, tú siempre logras "ser la razón por la que alguien vuelva a creer en la bondad". Admiro tu valentía; sé que tú y yo, como tantos otros, "aprendimos a ser fuertes porque no había otra opción", pero esa fuerza es la que nos trajo hasta aquí.</p>
+                
+                <p>A veces el futuro da un poco de vértigo, por eso siempre trato de recordarte que no hay que temer al fracaso, sino a que la oportunidad no exista. Hoy tenemos esa oportunidad justo frente a nosotros y quiero que la tomemos de la mano. ¿Por qué dudar? Como dicen por ahí, 'we have nothing to lose' y tenemos todo un mundo por ganar juntos.</p>
+                
+                <p>Quiero que lo sepas hoy y siempre: "yo a usted la puedo querer con verraquera", con esa fuerza que no se rinde y que te elige cada mañana. Porque "qué bueno es vivir si siempre hay alguien que canta junto a ti", y tu voz es mi melodía favorita.</p>
+                
+                <p>Al final, "life’s like a movie, write your own ending". Yo ya estoy escribiendo el mío, y en todas las escenas finales, siempre estás tú.</p>
+
+                <p class="valentines-text">Feliz San Valentín ❤️</p>
+                
+                <div class="signature">- Tu Dev Enamorado, Chiquitongo</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Lógica para revelar la carta secreta
+        const btnRevelar = document.getElementById('btn-revelar');
+        const secretLetter = document.getElementById('secret-letter');
+
+        btnRevelar.addEventListener('click', () => {
+            if (navigator.vibrate) navigator.vibrate([50, 100, 50]);
+            btnRevelar.style.display = 'none';
+            secretLetter.style.display = 'block';
+            setTimeout(() => {
+                secretLetter.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrega Mágica para Mariana 🦉</title>
+    <style>
+        /* --- FUENTES MÁGICAS --- */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Dancing+Script:wght@600&display=swap');
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: linear-gradient(135deg, #2b102f 0%, #1a0a1e 100%);
+            font-family: 'Cinzel Decorative', serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- CONTADOR --- */
+        #counter-badge {
+            position: absolute; top: 20px; right: 20px;
+            background: rgba(43, 16, 47, 0.9); color: #d4af37;
+            padding: 10px 25px; border-radius: 15px; font-size: 1.1rem;
+            border: 2px solid #d4af37; box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+            z-index: 100;
+        }
+
+        /* --- SOBRE CERRADO --- */
+        .envelope-wrapper {
+            position: relative; width: 300px; height: 200px; cursor: pointer;
+            transition: transform 0.3s; z-index: 50;
+        }
+        .envelope-wrapper:hover { transform: scale(1.05); }
+
+        .envelope-body {
+            position: absolute; bottom: 0; width: 100%; height: 100%;
+            background-color: #dcbfa5; border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden;
+        }
+
+        .flap { position: absolute; width: 0; height: 0; border-style: solid; }
+        .flap-left { border-width: 100px 0 100px 150px; border-color: transparent transparent transparent #cbaea1; top: 0; left: 0; }
+        .flap-right { border-width: 100px 150px 100px 0; border-color: transparent #cbaea1 transparent transparent; top: 0; right: 0; }
+        .flap-bottom { border-width: 0 150px 110px 150px; border-color: transparent transparent #e6cfb9 transparent; bottom: 0; left: 0; z-index: 2; }
+        .flap-top { border-width: 120px 150px 0 150px; border-color: #d4bcab transparent transparent transparent; top: 0; left: 0; z-index: 3; transform-origin: top; transition: transform 0.6s ease-in-out; }
+
+        /* Sello Rojo del Sobre */
+        .wax-seal-outer {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -80%);
+            width: 50px; height: 50px; background: #8b0000; border-radius: 50%; z-index: 4;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.3); border: 2px dashed #600000;
+            color: #500000; font-size: 24px; font-weight: bold;
+        }
+
+        /* --- CARTA ABIERTA --- */
+        #letter-container {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 95%; max-width: 550px;
+            background-color: #f4e4bc;
+            background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
+            padding: 40px 30px;
+            border: 4px double #8b4513; border-radius: 8px;
+            box-shadow: 0 0 60px rgba(212, 175, 55, 0.5);
+            z-index: 200; opacity: 0;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden; 
+        }
+
+        #letter-container.open { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+
+        .letter-content h2 {
+            font-family: 'Cinzel Decorative', serif; color: #5a3219;
+            text-align: center; margin-bottom: 20px; font-size: 1.8rem;
+            border-bottom: 2px solid #d4af37; padding-bottom: 10px;
+        }
+
+        .letter-content p {
+            font-family: 'Dancing Script', cursive; font-size: 1.4rem;
+            color: #3b2314; line-height: 1.5; margin-bottom: 15px;
+        }
+
+        .signature { text-align: right; font-size: 1.6rem; margin-top: 20px; font-weight: bold; color: #8b0000; }
+
+        /* --- BOTÓN SÍ --- */
+        .botones-container {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .magical-btn {
+            font-family: 'Cinzel Decorative', serif;
+            padding: 12px 40px;
+            font-size: 1.3rem;
+            border: 3px solid #d4af37;
+            background-color: #8b0000;
+            color: #d4af37;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+            text-shadow: 1px 1px 2px #000;
+        }
+        .magical-btn:active { transform: scale(0.95); }
+
+        /* --- SELLO NEGRO FINAL Y ENLACE --- */
+        /* Estilo para el enlace que envuelve al sello */
+        .seal-link {
+            text-decoration: none;
+            display: block;
+            width: fit-content;
+            margin: 30px auto 10px auto;
+            cursor: pointer;
+        }
+        /* Efecto al pasar el mouse sobre el enlace */
+        .seal-link:hover .black-seal-final {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+        }
+
+        .black-seal-final {
+            width: 80px; height: 80px;
+            background: #111; /* Negro casi puro */
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #d4af37; /* H dorada */
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 40px;
+            border: 3px dashed #333;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            /* Transición suave para el hover */
+            transition: all 0.3s ease;
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        @keyframes popIn { from { transform: scale(0); opacity:0; } to { transform: scale(1); opacity: 1;} }
+
+        /* --- TÍTULO PRINCIPAL Y ANIMACIONES --- */
+        h1.main-title { 
+            color: #edd59e; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); margin-top: 40px; font-size: 1.8rem; text-align: center; z-index: 10; 
+            transition: opacity 0.5s ease; /* Transición para desvanecer */
+        }
+        /* Clase para ocultar el título */
+        .title-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+
+        .floater { position: absolute; font-size: 3.5rem; cursor: pointer; bottom: -80px; animation: floatUp linear forwards; z-index: 100; filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5)); }
+        @keyframes floatUp { to { transform: translateY(-120vh) rotate(20deg); } }
+        .vanish { animation: fadeOut 0.5s forwards; }
+        @keyframes fadeOut { to { opacity: 0; transform: scale(1.5); } }
+    </style>
+</head>
+<body>
+
+    <div id="counter-badge">Misión: Atrapa 3 lechuzas (0/3)</div>
+
+    <div class="envelope-wrapper" id="closed-envelope">
+        <div class="envelope-body">
+            <div class="flap flap-left"></div><div class="flap flap-right"></div><div class="flap flap-bottom"></div><div class="flap flap-top" id="top-flap"></div>
+            <div class="wax-seal-outer">H</div>
+        </div>
+    </div>
+
+    <h1 class="main-title">¿Esperas correspondencia importante? ✨</h1>
+
+    <div id="letter-container">
+        <div class="letter-content" id="final-message-area">
+            <h2>Entrega Especial por Correo Lechuza</h2>
+            <p>Querida <strong>Mariana</strong>,</p>
+            <p>Se requiere una habilidad mágica impresionante para interceptar estas cartas. ¡Claramente eres una bruja talentosa!</p>
+            <p>Ya que has atrapado el mensaje, tengo una pregunta muy importante que ni el Sombrero Seleccionador podría decidir por mí:</p>
+            <p style="text-align: center; font-size: 2rem; color: #8b0000; margin: 20px 0; font-family: 'Cinzel Decorative', serif;">¿Quieres ser mi San Valentín? ❤️</p>
+            <p>Prometo que nuestra cita será mejor que una cerveza de mantequilla en Las Tres Escobas.</p>
+            <div class="signature">Con amor mágico,<br>Chiquitongo</div>
+
+            <div class="botones-container">
+                <button id="btn-si" class="magical-btn">¡Sí, acepto! ✨</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- LÓGICA DEL JUEGO ---
+        let score = 0; const targetScore = 3; let gameActive = true;
+        const scoreDisplay = document.getElementById('counter-badge');
+        const letterContainer = document.getElementById('letter-container');
+        const closedEnvelope = document.getElementById('closed-envelope');
+
+        function createFloater() {
+            if (!gameActive) return;
+            const floater = document.createElement('div'); floater.classList.add('floater');
+            const emojis = ['🦉', '✉️', '✨', '📜']; floater.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            floater.style.left = Math.random() * 85 + 5 + 'vw'; floater.style.animationDuration = Math.random() * 3 + 4 + 's';
+            document.body.appendChild(floater);
+            ['mousedown', 'touchstart'].forEach(evt => floater.addEventListener(evt, (e) => { e.preventDefault(); popFloater(floater); }, {once: true}));
+            floater.addEventListener('animationend', () => floater.remove());
+        }
+        
+        function popFloater(element) {
+            if (!gameActive) return;
+            element.style.transition = "all 0.2s"; element.style.transform = "scale(1.5)"; element.style.opacity = "0";
+            setTimeout(() => element.remove(), 200);
+            if (navigator.vibrate) navigator.vibrate(40);
+            score++; scoreDisplay.innerText = `Misión: Atrapa 3 lechuzas (${score}/${targetScore})`;
+            if (score >= targetScore) winGame();
+        }
+        
+        function winGame() {
+            gameActive = false; scoreDisplay.style.display = 'none';
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+            closedEnvelope.classList.add('vanish');
+            setTimeout(() => { letterContainer.classList.add('open'); launchConfetti(); }, 300);
+        }
+        
+        function launchConfetti() { for(let i=0; i<30; i++) setTimeout(createFloater, i * 100); }
+        setInterval(createFloater, 800);
+
+        // --- ACCIÓN DEL BOTÓN SÍ ---
+        const btnSi = document.getElementById('btn-si');
+        const messageArea = document.getElementById('final-message-area');
+        // Seleccionamos el título principal
+        const mainTitle = document.querySelector('.main-title');
+
+        btnSi.addEventListener('click', () => {
+            launchConfetti(); launchConfetti();
+            if (navigator.vibrate) navigator.vibrate([50, 100, 50, 100]);
+
+            // 1. OCULTAR EL TÍTULO DE FONDO
+            mainTitle.classList.add('title-hidden');
+
+            // 2. REEMPLAZAR CONTENIDO Y AGREGAR EL ENLACE EN EL SELLO
+            messageArea.innerHTML = `
+                <h2 style="color: #d4af37; border:none; font-size: 2.5rem;">¡Cita Aceptada! ✨</h2>
+                <p style="text-align:center; font-size: 1.8rem; margin-top: 30px;">
+                    ¡Sabía que dirías que sí! <br> Prepárate para la mejor cita mágica. ❤️
+                </p>
+                <p style="text-align:center; font-size: 1.2rem; margin-top: 20px; color: #d4af37;">(Toca el sello para continuar)</p>
+
+                <div class="seal-link" onclick="window.location.href='itinerario.html'" style="cursor: pointer;">
+                    <div class="black-seal-final">H</div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
